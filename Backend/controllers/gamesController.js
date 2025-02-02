@@ -176,3 +176,156 @@ module.exports = {
   getLibraryGames,
   removeGameFromLibrary,
 };
+
+// const { ObjectId } = require("mongodb");
+// const { getGameCollection, getLibraryCollection } = require("../config/db");
+
+// // 📌 **Fetch all games for the homepage**
+// const getAllGames = async (req, res) => {
+//   try {
+//     const gamesCollection = await getGameCollection();
+//     const games = await gamesCollection.find().toArray();
+//     res.status(200).json(games);
+//   } catch (error) {
+//     console.error("Error fetching games:", error);
+//     res.status(500).json({ error: "Failed to fetch games. Please try again." });
+//   }
+// };
+
+// // 📌 **Search games by name**
+// const searchGames = async (req, res) => {
+//   try {
+//     const gamesCollection = await getGameCollection();
+//     const searchQuery = req.query.q;
+
+//     if (!searchQuery) {
+//       return res.status(400).json({ error: "Search query is required." });
+//     }
+
+//     const games = await gamesCollection
+//       .find({ name: { $regex: searchQuery, $options: "i" } })
+//       .toArray();
+
+//     res.status(200).json(games);
+//   } catch (error) {
+//     console.error("Error searching games:", error);
+//     res.status(500).json({ error: "Failed to search games. Please try again." });
+//   }
+// };
+
+// // 📌 **Fetch a single game by ID**
+// const getGameById = async (req, res) => {
+//   try {
+//     const gamesCollection = await getGameCollection();
+//     const gameId = req.params.id;
+
+//     if (!ObjectId.isValid(gameId)) {
+//       return res.status(400).json({ error: "Invalid game ID format" });
+//     }
+
+//     const game = await gamesCollection.findOne({ _id: new ObjectId(gameId) });
+
+//     if (!game) {
+//       return res.status(404).json({ error: "Game not found." });
+//     }
+
+//     res.status(200).json(game);
+//   } catch (error) {
+//     console.error("Error fetching game by ID:", error);
+//     res.status(500).json({ error: "Failed to fetch game. Please try again." });
+//   }
+// };
+
+// // 📌 **Add a game to the user's library**
+// const addGameToLibrary = async (req, res) => {
+//   try {
+//     const gamesCollection = await getGameCollection();
+//     const libraryCollection = await getLibraryCollection();
+
+//     const gameId = req.body.gameId;
+//     if (!gameId || !ObjectId.isValid(gameId)) {
+//       return res.status(400).json({ error: "Valid game ID is required." });
+//     }
+
+//     const userId = new ObjectId.createFromTime(Date.now() / 1000); // Convert user ID to ObjectId from timestamp
+
+//     // Check if the game is already in the user's library
+//     const existingGame = await libraryCollection.findOne({
+//       userId,
+//       gameId: new ObjectId(gameId),
+//     });
+//     if (existingGame) {
+//       return res.status(400).json({ error: "Game is already in the library." });
+//     }
+
+//     // Find the game details from the games collection
+//     const game = await gamesCollection.findOne({ _id: new ObjectId(gameId) });
+//     if (!game) {
+//       return res.status(404).json({ error: "Game not found." });
+//     }
+
+//     // Add the game to the user's library
+//     await libraryCollection.insertOne({
+//       userId,
+//       gameId: new ObjectId(gameId),
+//       name: game.name,
+//       reviews: game.reviews,
+//     });
+
+//     res.status(201).json({ message: "Game added to library.", game });
+//   } catch (error) {
+//     console.error("Error adding game to library:", error);
+//     res.status(500).json({ error: "Failed to add game. Please try again." });
+//   }
+// };
+
+// // 📌 **Get all games from the user's library**
+// const getLibraryGames = async (req, res) => {
+//   try {
+//     const libraryCollection = await getLibraryCollection();
+//     const userId = new ObjectId.createFromTime(Date.now() / 1000); // Convert user ID from timestamp
+
+//     const savedGames = await libraryCollection.find({ userId }).toArray();
+//     res.status(200).json(savedGames);
+//   } catch (error) {
+//     console.error("Error fetching library games:", error);
+//     res.status(500).json({ error: "Failed to fetch library games." });
+//   }
+// };
+
+// // 📌 **Remove a game from the user's library**
+// const removeGameFromLibrary = async (req, res) => {
+//   try {
+//     const libraryCollection = await getLibraryCollection();
+//     const gameId = req.params.id;
+
+//     if (!ObjectId.isValid(gameId)) {
+//       return res.status(400).json({ error: "Invalid game ID format" });
+//     }
+
+//     const userId = new ObjectId.createFromTime(Date.now() / 1000); // Convert user ID from timestamp
+
+//     const result = await libraryCollection.deleteOne({
+//       userId,
+//       gameId: new ObjectId(gameId),
+//     });
+
+//     if (result.deletedCount === 0) {
+//       return res.status(404).json({ error: "Game not found in the library." });
+//     }
+
+//     res.status(200).json({ message: "Game removed from library." });
+//   } catch (error) {
+//     console.error("Error removing game from library:", error);
+//     res.status(500).json({ error: "Failed to remove game. Please try again." });
+//   }
+// };
+
+// module.exports = {
+//   getAllGames,
+//   searchGames,
+//   getGameById,
+//   addGameToLibrary,
+//   getLibraryGames,
+//   removeGameFromLibrary,
+// };

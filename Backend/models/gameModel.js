@@ -1,9 +1,17 @@
-const { ObjectId } = require("mongodb");
-const { gamesCollection } = require("../config/db");
+const { getGameCollection } = require("../config/db");
 
 class Game {
-  constructor(name, titles, reviews, description, about, developer, genres) {
-    this._id = new ObjectId();
+  constructor(
+    _id,
+    name,
+    titles,
+    reviews,
+    description,
+    about,
+    developer,
+    genres
+  ) {
+    this._id = _id; // Ensure _id follows the expected numerical format
     this.name = name;
     this.titles = titles || [];
     this.reviews = reviews || []; // Array of images/videos
@@ -14,4 +22,5 @@ class Game {
   }
 }
 
-module.exports = { gamesCollection, Game };
+// Export a function to get the games collection dynamically
+module.exports = { getGameCollection, Game };

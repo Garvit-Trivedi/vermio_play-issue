@@ -211,11 +211,11 @@ const express = require("express");
 const cors = require("cors");
 const { connectDB } = require("./config/db");
 const gameRoutes = require("./routes/gamesRoutes");
+const authRoutes = require("./routes/authRoutes");
 
 const app = express();
-const PORT = 3000; // Change if needed
+const PORT = process.env.PORT || 3000;
 
-// Middleware
 app.use(cors());
 app.use(express.json());
 
@@ -227,11 +227,12 @@ const startServer = async () => {
 
     // Routes
     app.use("/api", gameRoutes);
+    app.use("/api/auth", authRoutes);
+
     app.get("/", (req, res) => {
       res.send("Server is working!");
     });
 
-    // Start server only after DB connection
     app.listen(PORT, () => {
       console.log(`🚀 Server running on http://localhost:${PORT}`);
     });
