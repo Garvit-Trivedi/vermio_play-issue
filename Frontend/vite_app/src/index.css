@@ -1,0 +1,26 @@
+/* src/styles/index.css */
+
+/* Global styles for the entire app */
+
+* {
+  color: rgba(125, 230, 249, 1)
+}
+
+body {
+  font-family: 'Arial', sans-serif;
+  background-color: rgba(36, 45, 77, 1);
+  color: #333;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+h1,
+h2 {
+  font-family: 'Arial', sans-serif;
+}
+
+/* Add any custom global styles here */

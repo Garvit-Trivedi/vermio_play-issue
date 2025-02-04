@@ -1,0 +1,5 @@
+{
+    "notebook.output.wordWrap": true,
+    "editor.wordWrap": "on",
+    "html.format.wrapAttributes": "auto"
+}
