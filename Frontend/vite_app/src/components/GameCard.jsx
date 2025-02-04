@@ -1,34 +1,39 @@
 import React, { useState } from "react";
-import { FaPlus, FaMinus } from "react-icons/fa"; // For library button (plus and minus icons)
-import { Link } from "react-router-dom"; // Import Link from react-router-dom
-import './tailwind.css';
+import { FaPlus, FaMinus } from "react-icons/fa";
+import { Link } from "react-router-dom";
+import { addToLibrary, removeFromLibrary } from "../services/api"; // Import API functions
+import "./tailwind.css";
 
 function GameCard({ game, isInLibrary, updateLibrary }) {
-  const [isHovered, setIsHovered] = useState(false); // Track hover state
+  const [isHovered, setIsHovered] = useState(false);
 
-  const handleLibraryClick = () => {
-    updateLibrary(game._id); // Toggle game in the library
+  const handleLibraryClick = async () => {
+    try {
+      if (isInLibrary) {
+        await removeFromLibrary(game._id);
+      } else {
+        await addToLibrary(game._id);
+      }
+      updateLibrary(game._id);
+    } catch (error) {
+    }
   };
+
 
   return (
     <div
       className="game-card w-100 relative bg-gray-900 rounded-lg overflow-hidden transition-transform transform hover:scale-110 hover:z-20 border-2 border-cyan-300 hover:border-blue-500"
-      onMouseEnter={() => setIsHovered(true)} // On hover
-      onMouseLeave={() => setIsHovered(false)} // On hover leave
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
     >
-      {/* Game Title - Static (bottom center) */}
-      {!isHovered && (
-        <div className="text-cyan-300 text-center font-extrabold p-4 absolute bottom-4 left-1/2 transform -translate-x-1/2 z-10">
-          {/* {game.name} */}
-        </div>
-      )}
-
       {/* Game Title - Hover (bottom left) */}
       {isHovered && (
         <div className="text-cyan-300 p-4 absolute bg-slate-800 font-extrabold rounded-2xl bottom-4 left-10 z-10 w-80">
           {game.name}
-          {/* Play Button: Appears on hover */}
-          <Link to={`/game/${game._id}`} className="absolute bottom-1.5 right-2 border-cyan-300 bg-slate-900 border-2 text-cyan-300 p-2 rounded-2xl hover:border-blue-700 hover:text-blue-700 transition">
+          <Link
+            to={`/game/${game._id}`}
+            className="absolute bottom-1.5 right-2 border-cyan-300 bg-slate-900 border-2 text-cyan-300 p-2 rounded-2xl hover:border-blue-700 hover:text-blue-700 transition"
+          >
             Play
           </Link>
         </div>
@@ -39,14 +44,14 @@ function GameCard({ game, isInLibrary, updateLibrary }) {
         <div className="w-full h-[200px] relative">
           <img
             src={game.profilePic}
-            alt={game.title}
-            className="w-full h-full object-cover" // Make the image cover the entire container
+            alt={game.name}
+            className="w-full h-full object-cover"
           />
         </div>
       ) : (
         // Video for hover state
         <video
-          src={game.firstVideo} // Use appropriate video URL from the game data
+          src={game.firstVideo}
           className="w-full h-[200px] object-cover"
           autoPlay
           loop
@@ -54,7 +59,7 @@ function GameCard({ game, isInLibrary, updateLibrary }) {
         />
       )}
 
-      {/* Library Button: Appears on hover */}
+      {/* Library Button */}
       {isHovered && (
         <button
           onClick={handleLibraryClick}
@@ -65,9 +70,10 @@ function GameCard({ game, isInLibrary, updateLibrary }) {
         </button>
       )}
 
-      {/* Inner Shadow effect on hover with a larger spread */}
+      {/* Inner Shadow Effect */}
       <div
-        className={`absolute inset-0 rounded-lg transition-all duration-300 ${isHovered ? "z-0 shadow-[inset_0_10px_100px_rgba(0,0,0,50)]" : ""}`}
+        className={`absolute inset-0 rounded-lg transition-all duration-300 ${isHovered ? "z-0 shadow-[inset_0_10px_100px_rgba(0,0,0,0.7)]" : ""
+          }`}
       ></div>
     </div>
   );

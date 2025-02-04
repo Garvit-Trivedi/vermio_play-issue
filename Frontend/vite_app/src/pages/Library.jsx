@@ -17,7 +17,7 @@ function Library() {
       setGames(libraryGames);
     };
     loadLibrary();
-  }, []);
+  }, [library]);
 
 
   const updateLibrary = (gameId) => {

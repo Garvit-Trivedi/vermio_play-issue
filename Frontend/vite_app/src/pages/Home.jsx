@@ -31,6 +31,7 @@ function Home() {
       const newLibrary = new Set(prev);
       if (newLibrary.has(gameId)) {
         newLibrary.delete(gameId); // Remove from library
+        console.log("Game removed from library:", gameId);
       } else {
         newLibrary.add(gameId); // Add to library
       }
