@@ -20,7 +20,7 @@ function Library() {
   }, [library]);
 
 
-  const updateLibrary = (gameId) => {
+const updateLibrary = (gameId) => {
     setLibrary((prev) => {
       const newLibrary = new Set(prev);
       if (newLibrary.has(gameId)) {
