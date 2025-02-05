@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Home from './pages/Home';
 import Library from './pages/Library';
-// import Discover from './pages/Discover';
+import Discover from './pages/Discover';
 // import Categories from './pages/Categories';
 import GamePage from './pages/GamePage';
 
@@ -18,7 +18,7 @@ function App() {
         {/* Other routes */}
         <Route path="/home" element={<Home />} />
         <Route path="/library" element={<Library />} />
-        {/* <Route path="/discover" element={<Discover />} /> */}
+        <Route path="/discover" element={<Discover />} />
         {/* <Route path="/categories" element={<Categories />} /> */}
         <Route path="/game/:id" element={<GamePage />} />
       </Routes>
