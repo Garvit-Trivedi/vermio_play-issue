@@ -6,22 +6,25 @@ import Library from './pages/Library';
 import Discover from './pages/Discover';
 // import Categories from './pages/Categories';
 import GamePage from './pages/GamePage';
+import './components/tailwind.css'
 
 function App() {
   return (
     <Router>
       <Navbar />
-      <Routes>
-        {/* Default route for home */}
-        <Route path="/" exact element={<Home />} />
+      <div className='relative top-20 h-full'>
+        <Routes>
+          {/* Default route for home */}
+          <Route path="/" exact element={<Home />} />
 
-        {/* Other routes */}
-        <Route path="/home" element={<Home />} />
-        <Route path="/library" element={<Library />} />
-        <Route path="/discover" element={<Discover />} />
-        {/* <Route path="/categories" element={<Categories />} /> */}
-        <Route path="/game/:id" element={<GamePage />} />
-      </Routes>
+          {/* Other routes */}
+          <Route path="/home" element={<Home />} />
+          <Route path="/library" element={<Library />} />
+          <Route path="/discover" element={<Discover />} />
+          {/* <Route path="/categories" element={<Categories />} /> */}
+          <Route path="/game/:id" element={<GamePage />} />
+        </Routes>
+      </div>
     </Router>
   );
 }
