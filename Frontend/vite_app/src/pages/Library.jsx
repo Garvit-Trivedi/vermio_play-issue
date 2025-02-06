@@ -24,7 +24,7 @@ const updateLibrary = (gameId) => {
     setLibrary((prev) => {
       const newLibrary = new Set(prev);
       if (newLibrary.has(gameId)) {
-        newLibrary.delete(gameId);
+        newLibrary.delete(gameId);  
       } else {
         newLibrary.add(gameId);
       }
