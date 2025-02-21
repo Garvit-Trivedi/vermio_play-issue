@@ -1,76 +1,127 @@
+// import React, { useEffect, useState } from 'react';
+// import { useParams } from 'react-router-dom';
+// import { fetchGameDetails } from '../services/api';
+
+// function GamePage() {
+//   const { id } = useParams();
+//   const [gameDetails, setGameDetails] = useState(null);
+
+//   useEffect(() => {
+//     const loadGameDetails = async () => {
+//       const data = await fetchGameDetails(id);
+//       setGameDetails(data);
+//     };
+//     loadGameDetails();
+//   }, [id]);
+
+//   if (!gameDetails) return <div className="text-white text-center p-10">Loading...</div>;
+
+//   return (
+//     <div className="relative min-h-screen flex flex-col items-center">
+//       {/* Background Image */}
+//       <div
+//         className="absolute inset-0 bg-cover bg-center"
+//         style={{ backgroundImage: `url(${gameDetails.bgPic})` }}
+//       ></div>
+
+//       {/* HEADER SECTION (Profile Pic, Name, Description) */}
+//       <div className="relative z-10 flex justify-between rounded-lg mt-10 w-[80%]">
+//         {/* Profile Picture */}
+//         <img src={gameDetails.profilePic} alt={gameDetails.name} className="mr-6" />
+
+//         {/* Name & Description */}
+//         <div className="text-white">
+//           <h1 className="text-4xl font-bold">{gameDetails.name}</h1>
+//           <p className="mt-2 text-lg max-w-2xl">{gameDetails.description}</p>
+//         </div>
+//       </div>
+
+//       {/* TITLES SECTION (Below Profile Pic) */}
+//       <div className="relative z-10 mt-6 w-[80%]">
+//         <h2 className="text-white text-2xl font-semibold">Popular Titles</h2>
+//         <div className="flex flex-wrap gap-2 mt-2">
+//           {gameDetails.titles?.map((title, index) => (
+//             <span key={index} className="bg-gray-800 px-3 py-1 rounded-lg text-sm text-white">
+//               {title}
+//             </span>
+//           ))}
+//         </div>
+//       </div>
+
+//       {/* ABOUT SECTION (Below Titles) */}
+//       <div className="relative z-10 mt-6 w-[80%]">
+//         <h2 className="text-white text-2xl font-bold">About the Game</h2>
+//         <p className="text-white text-sm mt-1">{gameDetails.about}</p>
+//       </div>
+//     </div>
+//   );
+// }
+
+// export default GamePage;
+
+
+
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { fetchGameDetails } from '../services/api'; // Assuming you have this API function for fetching the game details
+import { fetchGameDetails } from '../services/api';
+import Reviews from '../components/rewiews'; // Importing Reviews component
 
 function GamePage() {
-  const { id } = useParams(); // Get the game ID from the URL
+  const { id } = useParams();
   const [gameDetails, setGameDetails] = useState(null);
 
   useEffect(() => {
     const loadGameDetails = async () => {
-      const data = await fetchGameDetails(id); // Fetch game details using the ID
+      const data = await fetchGameDetails(id);
       setGameDetails(data);
     };
     loadGameDetails();
   }, [id]);
 
-  if (!gameDetails) return <div>Loading...</div>;
+  if (!gameDetails) return <div className="text-white text-center p-10">Loading...</div>;
 
   return (
-    <div className="game-page container mx-auto p-4">
-      {/* Background with profilePic and game name */}
-      <div className="relative bg-center bg-contain h-100" style={{ backgroundImage: `url(${gameDetails.bgPic})` }}>
-        <div className="absolute inset-0 bg-black opacity-0"></div>
-        <div className="absolute top-0 left-0 p-4 flex items-center">
-          {/* Profile picture */}
-          <img src={gameDetails.profilePic} alt={gameDetails.name} className=" h-30  mr-4" />
-          {/* Game Name and Description */}
-          <div className="text-white">
-            <h1 className="text-4xl font-bold">{gameDetails.name}</h1>
-            <p className="text-balance mt-2">{gameDetails.description}</p>
-          </div>
+    <div className="relative min-h-screen flex flex-col items-center">
+      {/* Background Image */}
+      <div
+        className="absolute inset-0 bg-cover bg-center"
+        style={{ backgroundImage: `url(${gameDetails.bgPic})` }}
+      ></div>
+
+      {/* HEADER SECTION (Profile Pic, Name, Description) */}
+      <div className="relative z-10 flex justify-between rounded-lg mt-10 w-[80%]">
+        {/* Profile Picture */}
+        <img src={gameDetails.profilePic} alt={gameDetails.name} className="mr-6" />
+
+        {/* Name & Description */}
+        <div className="text-white">
+          <h1 className="text-4xl font-bold">{gameDetails.name}</h1>
+          <p className="mt-2 text-lg max-w-2xl">{gameDetails.description}</p>
         </div>
       </div>
 
-      <div className="game-details p-4">
-        {/* Game About */}
-        <p className="text-sm mt-4">{gameDetails.about}</p>
-
-        <div className="mt-6">
-          <h2 className="text-2xl font-bold">Reviews</h2>
-          <ReviewSlider reviews={gameDetails.reviews} />
-        </div>
-      </div>
-    </div>
-  );
-}
-
-// ReviewSlider component to display reviews
-function ReviewSlider({ reviews }) {
-  return (
-    <div className="review-slider mt-4">
-      <div className="relative">
-        <div className="flex overflow-x-scroll space-x-4">
-          {reviews.map((review, index) => (
-            <div key={index} className="w-96 flex-shrink-0">
-              {review.type === 'video' ? (
-                <div className="video-review">
-                  <video width="100%" controls>
-                    <source src={review.url} type="video/webm" />
-                    Your browser does not support the video tag.
-                  </video>
-                  <img src={review.thumbnail} alt="Thumbnail" className="mt-2 w-50" />
-                </div>
-              ) : (
-                <div className="image-review">
-                  {/* For image reviews, use the same URL as the thumbnail but scaled to match video size */}
-                  <img src={review.url} alt="Review Image" className="w-full" />
-                  <img src={review.url} alt="Thumbnail" className="mt-2 w-50" />
-                </div>
-              )}
-            </div>
+      {/* TITLES SECTION (Below Profile Pic) */}
+      <div className="relative z-10 mt-6 w-[80%]">
+        <h2 className="text-white text-2xl font-semibold">Popular Titles</h2>
+        <div className="flex flex-wrap gap-2 mt-2">
+          {gameDetails.titles?.map((title, index) => (
+            <span key={index} className="bg-gray-800 px-3 py-1 rounded-lg text-sm text-white">
+              {title}
+            </span>
           ))}
         </div>
+      </div>
+
+      {/* ABOUT SECTION (Below Titles) */}
+      <div className="relative z-10 mt-6 w-[80%]">
+        <h2 className="text-white text-2xl font-bold">About the Game</h2>
+        <p className="text-white text-sm mt-1">{gameDetails.about}</p>
+      </div>
+
+      {/* REVIEWS SECTION (Below About Section) */}
+      <div className="relative z-10 mt-6 w-[80%]">
+        <h2 className="text-white text-2xl font-bold">Game Reviews</h2>
+        <Reviews reviews={gameDetails.reviews} />
       </div>
     </div>
   );
