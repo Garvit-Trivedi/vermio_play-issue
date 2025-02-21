@@ -52,7 +52,7 @@ function GameCard({ game, isInLibrary, updateLibrary }) {
         // Video for hover state
         <video
           src={game.firstVideo}
-          className="w-full h-[200px] object-cover"
+          className="w-full h-[200px]  object-cover"
           autoPlay
           loop
           muted
@@ -72,7 +72,7 @@ function GameCard({ game, isInLibrary, updateLibrary }) {
 
       {/* Inner Shadow Effect */}
       <div
-        className={`absolute inset-0 rounded-lg transition-all duration-300 ${isHovered ? "z-0 shadow-[inset_0_10px_100px_rgba(0,0,0,0.7)]" : ""
+        className={`absolute inset-0 rounded-lg transition-all duration-300 ${isHovered ? "z-0 shadow-[inset_0_50px_10px_100px_rgba(0,0,0,0.3)]" : ""
           }`}
       ></div>
     </div>
