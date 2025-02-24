@@ -7,6 +7,7 @@ import Discover from './pages/Discover';
 // import Categories from './pages/Categories';
 import GamePage from './pages/GamePage';
 import './components/tailwind.css'
+import Footer from './components/Footer';
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
           <Route path="/game/:id" element={<GamePage />} />
         </Routes>
       </div>
+      <Footer />
     </Router>
   );
 }

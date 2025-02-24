@@ -2,20 +2,28 @@ import { useState, useEffect } from "react";
 import { fetchGames, fetchLibrary, addToLibrary, removeFromLibrary } from "../services/api";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faMinus } from "@fortawesome/free-solid-svg-icons";
-import { useNavigate } from "react-router-dom";  // Import useNavigate from React Router
+import { useNavigate } from "react-router-dom";
+import GameLoader from "../components/GameLoader"; // Import the Loader
 
 const Discover = () => {
   const [games, setGames] = useState([]);
   const [library, setLibrary] = useState([]);
   const [hovered, setHovered] = useState(null);
-  const navigate = useNavigate();  // Initialize the navigate function
+  const [loading, setLoading] = useState(true); // Loader state
+  const navigate = useNavigate();
 
   useEffect(() => {
     const loadData = async () => {
-      const gamesData = await fetchGames();
-      const libraryData = await fetchLibrary();
-      setGames(gamesData);
-      setLibrary(libraryData.map((game) => game._id));
+      try {
+        const gamesData = await fetchGames();
+        const libraryData = await fetchLibrary();
+        setGames(gamesData);
+        setLibrary(libraryData.map((game) => game._id));
+      } catch (error) {
+        console.error("Error fetching games:", error);
+      } finally {
+        setLoading(false); // Hide loader once data is loaded
+      }
     };
     loadData();
   }, []);
@@ -36,8 +44,12 @@ const Discover = () => {
   };
 
   const handlePlay = (game) => {
-    navigate(`/game/${game._id}`);  // Navigate to the game details page
+    navigate(`/game/${game._id}`);
   };
+
+  if (loading) {
+    return <GameLoader />; // Show loader while fetching data
+  }
 
   return (
     <div className="p-4">
@@ -50,7 +62,6 @@ const Discover = () => {
             onMouseEnter={() => setHovered(game._id)}
             onMouseLeave={() => setHovered(null)}
           >
-            {/* Image or Video on Hover */}
             {hovered === game._id ? (
               <video
                 src={game.firstVideo}
@@ -67,7 +78,6 @@ const Discover = () => {
               />
             )}
 
-            {/* Library Button (Top Right, Appears on Hover) */}
             {hovered === game._id && (
               <button
                 className="absolute top-2 right-2 w-10 h-10 flex items-center justify-center rounded-2xl border-2 bg-blue-900 text-white shadow-md"
@@ -77,18 +87,16 @@ const Discover = () => {
               </button>
             )}
 
-            {/* Game Title (Moves from Center to Left on Hover) */}
             <h2
               className={`text-lg font-semibold italic text-[#bde0fe] transition-all duration-300 ${hovered === game._id ? "absolute bottom-4 left-4" : "text-center mt-2"}`}
             >
               {game.name}
             </h2>
 
-            {/* Play Button (Bottom Right, Appears on Hover) */}
             {hovered === game._id && (
               <button
                 className="absolute bottom-4 right-4 px-4 py-2 bg-blue-900 border-2 hover:border-blue-500 text-white rounded-lg text-md hover:text-blue-500"
-                onClick={() => handlePlay(game)}  // Trigger the navigation to the game details page
+                onClick={() => handlePlay(game)}
               >
                 ▶ PLAY
               </button>
