@@ -15,6 +15,8 @@ function GamePage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+
     const loadGameDetails = async () => {
       setLoading(true);
       try {
@@ -78,6 +80,7 @@ function GamePage() {
   };
 
   const handlePlay = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
     navigate(0);
   };
 
@@ -143,6 +146,10 @@ function GamePage() {
               game={game}
               isInLibrary={library.has(game._id)}
               updateLibrary={updateLibrary}
+              onPlay={() => {
+                navigate(`/game/${game._id}`);
+                window.scrollTo({ top: 0, behavior: "smooth" });
+              }}
             />
           ))}
         </div>
