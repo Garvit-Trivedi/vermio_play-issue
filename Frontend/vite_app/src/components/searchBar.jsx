@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { FaSearch, FaTimes } from "react-icons/fa";
 import { searchGames } from "../services/api";
 import { useNavigate } from "react-router-dom";
-import GamerLoader from "./GameLoader"; // Import loader
+import GameLoader from "./GameLoader"; // Import loader
 
 const SearchBar = () => {
     const [query, setQuery] = useState("");
@@ -17,9 +17,10 @@ const SearchBar = () => {
 
         if (value.length > 0) {
             setLoading(true); // Show loader
+            setResults([]); // Reset results
             const searchResults = await searchGames(value);
             setResults(searchResults);
-            setLoading(false); // Hide loader
+            setLoading(false); // Hide loader after fetching
         } else {
             setResults([]);
             setLoading(false);
@@ -43,8 +44,8 @@ const SearchBar = () => {
             {/* Search Button / Input */}
             <div
                 className={`fixed top-2 transition-all duration-300 ease-in-out flex items-center ${isSearchOpen
-                        ? "left-1/2 transform -translate-x-1/2 w-[400px] bg-gray-800 p-2 rounded-full"
-                        : "left-50 w-[40px] h-[40px] rounded-full flex items-center justify-center"
+                    ? "left-1/2 transform -translate-x-1/2 w-[400px] bg-gray-800 p-2 rounded-full"
+                    : "left-50 w-[40px] h-[40px] rounded-full flex items-center justify-center"
                     }`}
             >
                 {!isSearchOpen ? (
@@ -69,11 +70,16 @@ const SearchBar = () => {
                 )}
             </div>
 
-            {/* Search Results Dropdown (Centered) */}
-            {isSearchOpen && (loading || results.length > 0) && (
-                <div className="fixed top-20 left-1/2 transform -translate-x-1/2 bg-gray-900 p-4 transition-all duration-300 rounded-xl w-[500px] shadow-lg max-h-80 overflow-y-auto border-4">
+            {/* Search Results Dropdown with Animated Height */}
+            {isSearchOpen && query.length > 0 && (
+                <div
+                    className={`fixed top-20 left-1/2 transform -translate-x-1/2 bg-gray-900 p-4 rounded-xl w-[500px] shadow-lg overflow-y-auto border-4 transition-all duration-300 ${loading ? "h-52" : results.length > 0 ? "max-h-80" : "h-0 opacity-0"
+                        }`}
+                >
                     {loading ? (
-                        <GamerLoader /> // Show loader when fetching
+                        <div className="flex items-center justify-center h-full">
+                            <GameLoader isFullPage={false} />
+                        </div>
                     ) : (
                         results.map((game) => (
                             <GameCard key={game._id} game={game} onClick={() => handleGameClick(game._id)} />
@@ -97,9 +103,19 @@ const GameCard = ({ game, onClick }) => {
         >
             {/* Show Image by Default, Video on Hover */}
             {isHovered ? (
-                <video src={game.firstVideo} autoPlay loop muted className="w-55 h-30 transition-all duration-300 object-cover border-2 rounded-lg" />
+                <video
+                    src={game.firstVideo}
+                    autoPlay
+                    loop
+                    muted
+                    className="w-55 h-30 transition-all duration-300 object-cover border-2 rounded-lg"
+                />
             ) : (
-                <img src={game.profilePic} alt={game.name} className="w-50 h-25 transition-all duration-300 rounded-lg" />
+                <img
+                    src={game.profilePic}
+                    alt={game.name}
+                    className="w-50 h-25 transition-all duration-300 rounded-lg"
+                />
             )}
 
             <span className={`text-white ${isHovered ? "font-extrabold" : ""}`}>{game.name}</span>

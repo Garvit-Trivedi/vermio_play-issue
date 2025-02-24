@@ -1,43 +1,45 @@
 import React, { useEffect, useState } from "react";
-import { fetchGames, fetchLibrary } from "../services/api"; // Assuming you have these functions in the 'services/api.js'
+import { fetchGames, fetchLibrary } from "../services/api";
 import GameCard from "../components/GameCard";
+import GameLoader from "../components/GameLoader"; // Import loader
 
 function Home() {
   const [games, setGames] = useState([]);
   const [library, setLibrary] = useState(new Set());
+  const [loading, setLoading] = useState(true); // Loading state
 
-  // Fetch games and library when the component mounts
   useEffect(() => {
     const loadData = async () => {
       try {
-        // Fetch both games and library data
         const [gameData, libraryData] = await Promise.all([
-          fetchGames(), // Fetching all games
-          fetchLibrary(), // Fetching the current user's library
+          fetchGames(),
+          fetchLibrary(),
         ]);
         setGames(gameData);
-        setLibrary(new Set(libraryData.map((g) => g._id))); // Store game IDs in the library set
+        setLibrary(new Set(libraryData.map((g) => g._id)));
       } catch (error) {
         console.error("Error fetching games or library:", error);
+      } finally {
+        setLoading(false); // Stop loading after data fetch
       }
     };
 
     loadData();
-  }, []); // Only run this effect once when the component mounts
+  }, []);
 
-  // Update the library by adding/removing games
   const updateLibrary = (gameId) => {
     setLibrary((prev) => {
       const newLibrary = new Set(prev);
       if (newLibrary.has(gameId)) {
-        newLibrary.delete(gameId); // Remove from library
-        console.log("Game removed from library:", gameId);
+        newLibrary.delete(gameId);
       } else {
-        newLibrary.add(gameId); // Add to library
+        newLibrary.add(gameId);
       }
       return newLibrary;
     });
   };
+
+  if (loading) return <GameLoader />; // Show loader while loading
 
   return (
     <div className="home-page container m- p-4">
