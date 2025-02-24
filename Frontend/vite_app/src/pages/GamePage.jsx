@@ -136,7 +136,7 @@ function GamePage() {
 
       <div className="relative z-10 mt-8 w-full max-w-5xl">
         <h2 className="text-white text-2xl font-bold mb-4">More Games</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {moreGames.map((game) => (
             <GameCard
               key={game._id}
