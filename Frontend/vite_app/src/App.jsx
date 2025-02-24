@@ -4,7 +4,7 @@ import Navbar from './components/Navbar';
 import Home from './pages/Home';
 import Library from './pages/Library';
 import Discover from './pages/Discover';
-// import Categories from './pages/Categories';
+import Categories from './pages/Categories';
 import GamePage from './pages/GamePage';
 import './components/tailwind.css'
 import Footer from './components/Footer';
@@ -22,7 +22,7 @@ function App() {
           <Route path="/home" element={<Home />} />
           <Route path="/library" element={<Library />} />
           <Route path="/discover" element={<Discover />} />
-          {/* <Route path="/categories" element={<Categories />} /> */}
+          <Route path="/categories/:catname" element={<Categories />} />
           <Route path="/game/:id" element={<GamePage />} />
         </Routes>
       </div>

@@ -80,5 +80,14 @@ export const fetchGameDetails = async (gameId) => {
   }
 };
 
-
-
+// Fetch games by category
+export const fetchGamesByCategory = async (category) => {
+  try {
+    const res = await fetch(`${BASE_URL}/games/search?q=${category}`);
+    if (!res.ok) throw new Error(`Failed to fetch games for category: ${category}`);
+    return await res.json();
+  } catch (error) {
+    console.error(error);
+    return [];
+  }
+};
