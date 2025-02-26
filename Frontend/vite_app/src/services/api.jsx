@@ -62,6 +62,7 @@ export const removeFromLibrary = async (gameId) => {
     });
 
     if (!res.ok) throw new Error("Failed to remove game from library");
+    console.log("Game removed from library successfully");
   } catch (error) {
     console.error(error);
     throw error; // Propagate the error

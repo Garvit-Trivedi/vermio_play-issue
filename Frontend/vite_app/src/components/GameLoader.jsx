@@ -3,9 +3,8 @@ import React from "react";
 const GameLoader = ({ isFullPage = true }) => {
     return (
         <div
-            className={`flex items-center justify-center ${
-                isFullPage ? "h-screen" : "h-full"
-            } w-full relative bg-transparent`}
+            className={`flex items-center justify-center ${isFullPage ? "h-screen" : "h-full"
+                } w-full relative bg-transparent`}
         >
             {/* Rotating Gradient + Logo */}
             <div className="relative flex items-center justify-center">

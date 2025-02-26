@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import { FaPlus, FaMinus } from "react-icons/fa";
 import { fetchGameDetails, fetchGames, addToLibrary, removeFromLibrary, fetchLibrary } from "../services/api";
 import Reviews from "../components/Rewiews";
 import GameCard from "../components/GameCard";
 import GameLoader from "../components/GameLoader";
+import Buttons from "../components/Buttons";
 
 function GamePage() {
   const { id } = useParams();
@@ -99,19 +100,9 @@ function GamePage() {
         <div className="text-white text-center md:text-left">
           <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold">{gameDetails.name}</h1>
           <p className="mt-2 text-sm sm:text-lg max-w-2xl">{gameDetails.description}</p>
-          <div className="mt-4 flex gap-4 justify-center md:justify-start">
-            <button
-              onClick={handlePlay}
-              className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
-            >
-              Play
-            </button>
-            <button
-              onClick={() => handleLibraryToggle(gameDetails._id)}
-              className={`px-4 py-2 rounded-lg ${library.has(gameDetails._id) ? "bg-red-500 hover:bg-red-700" : "bg-green-500 hover:bg-green-700"} text-white`}
-            >
-              {library.has(gameDetails._id) ? <FaMinus /> : <FaPlus />}
-            </button>
+          <div className="mt-4 flex gap-4 justify-center items-center md:justify-start">
+            <Buttons type="play" gameId={gameDetails._id} />
+            <Buttons type="library" gameId={gameDetails._id} />
           </div>
         </div>
       </div>

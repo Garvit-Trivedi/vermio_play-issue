@@ -1,24 +1,19 @@
 import { useState, useEffect } from "react";
-import { fetchGames, fetchLibrary, addToLibrary, removeFromLibrary } from "../services/api";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus, faMinus } from "@fortawesome/free-solid-svg-icons";
-import { useNavigate } from "react-router-dom";
+import { fetchGames } from "../services/api";
 import GameLoader from "../components/GameLoader"; // Import the Loader
+import Buttons from "../components/Buttons";
+import './home.css'
 
 const Discover = () => {
   const [games, setGames] = useState([]);
-  const [library, setLibrary] = useState([]);
   const [hovered, setHovered] = useState(null);
   const [loading, setLoading] = useState(true); // Loader state
-  const navigate = useNavigate();
 
   useEffect(() => {
     const loadData = async () => {
       try {
         const gamesData = await fetchGames();
-        const libraryData = await fetchLibrary();
         setGames(gamesData);
-        setLibrary(libraryData.map((game) => game._id));
       } catch (error) {
         console.error("Error fetching games:", error);
       } finally {
@@ -27,25 +22,6 @@ const Discover = () => {
     };
     loadData();
   }, []);
-
-  const handleLibrary = async (game) => {
-    const inLibrary = library.includes(game._id);
-    try {
-      if (inLibrary) {
-        await removeFromLibrary(Number(game._id));
-        setLibrary((prev) => prev.filter((id) => id !== game._id));
-      } else {
-        await addToLibrary(Number(game._id));
-        setLibrary((prev) => [...prev, game._id]);
-      }
-    } catch (error) {
-      console.error("Error updating library:", error);
-    }
-  };
-
-  const handlePlay = (game) => {
-    navigate(`/game/${game._id}`);
-  };
 
   if (loading) {
     return <GameLoader />; // Show loader while fetching data
@@ -79,12 +55,9 @@ const Discover = () => {
             )}
 
             {hovered === game._id && (
-              <button
-                className="absolute top-2 right-2 w-10 h-10 flex items-center justify-center rounded-2xl border-2 bg-blue-900 text-white shadow-md"
-                onClick={() => handleLibrary(game)}
-              >
-                <FontAwesomeIcon icon={library.includes(game._id) ? faMinus : faPlus} />
-              </button>
+              <div className="absolute top-2 right-2">
+                <Buttons type="library" gameId={game._id} />
+              </div>
             )}
 
             <h2
@@ -94,12 +67,9 @@ const Discover = () => {
             </h2>
 
             {hovered === game._id && (
-              <button
-                className="absolute bottom-4 right-4 px-4 py-2 bg-blue-900 border-2 hover:border-blue-500 text-white rounded-lg text-md hover:text-blue-500"
-                onClick={() => handlePlay(game)}
-              >
-                ▶ PLAY
-              </button>
+              <div className="absolute right-3">
+                <Buttons type="play" gameId={game._id} />
+              </div>
             )}
           </div>
         ))}
