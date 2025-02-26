@@ -46,12 +46,12 @@ function Reviews({ reviews }) {
     <div className="relative w-full flex flex-col items-center mt-4">
       <div className="w-full max-w-4xl overflow-hidden rounded-lg relative mt-8">
         {reviews[currentIndex].type === 'video' ? (
-          <video 
-            key={reviews[currentIndex].url} 
-            className="w-full h-100 object-fill" 
-            autoPlay 
-            muted 
-            controls 
+          <video
+            key={reviews[currentIndex].url}
+            className="w-full h-100 object-fill"
+            autoPlay
+            muted
+            controls
             ref={videoRef}
           >
             <source src={reviews[currentIndex].url} type="video/webm" />
@@ -73,8 +73,8 @@ function Reviews({ reviews }) {
         </button>
       </div>
       <div className="w-full max-w-4xl mt-4 overflow-hidden relative">
-        <div 
-          className="flex space-x-2 overflow-x-auto relative no-scrollbar" 
+        <div
+          className="flex space-x-2 overflow-x-auto relative no-scrollbar"
           ref={thumbnailContainerRef}
         >
           {reviews.map((review, index) => (

@@ -8,6 +8,7 @@ import Categories from './pages/Categories';
 import GamePage from './pages/GamePage';
 import './components/tailwind.css'
 import Footer from './components/Footer';
+import { ToastContainer } from "react-toastify";
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
         </Routes>
       </div>
       <Footer />
+      <ToastContainer />
     </Router>
   );
 }
