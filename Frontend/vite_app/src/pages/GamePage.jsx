@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { FaPlus, FaMinus } from "react-icons/fa";
 import { fetchGameDetails, fetchGames, addToLibrary, removeFromLibrary, fetchLibrary } from "../services/api";
-import Reviews from "../components/reviews";
+import Reviews from "../components/rewiews";
 import GameCard from "../components/GameCard";
 import GameLoader from "../components/GameLoader";
 import Buttons from "../components/Buttons";
