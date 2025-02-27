@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Buttons from "./Buttons";
+import PrivateRoute from "./PrivateRoute";
 
 function GameCard({ game }) {
   const [isHovered, setIsHovered] = useState(false);
@@ -13,8 +14,7 @@ function GameCard({ game }) {
       {/* Game Title & Play Button (Visible on Hover) */}
       {isHovered && (
         <div className="text-cyan-300 p-4 absolute bg-slate-800 font-extrabold rounded-2xl bottom-4 left-10 z-10 w-80">
-          {game.name}
-          <Buttons type="play" gameId={game._id} className="absolute top-1.5 right-2" />
+          {game.name}<Buttons type="play" gameId={game._id} className="absolute top-1.5 right-2" />
         </div>
       )}
 
