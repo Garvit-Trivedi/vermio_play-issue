@@ -1,26 +1,16 @@
-const { getGameCollection } = require("../config/db");
+const mongoose = require("mongoose");
 
-class Game {
-  constructor(
-    _id,
-    name,
-    titles,
-    reviews,
-    description,
-    about,
-    developer,
-    genres
-  ) {
-    this._id = _id; // Ensure _id follows the expected numerical format
-    this.name = name;
-    this.titles = titles || [];
-    this.reviews = reviews || []; // Array of images/videos
-    this.description = description || "";
-    this.about = about || "";
-    this.developer = developer || "";
-    this.genres = genres || [];
-  }
-}
+const gameSchema = new mongoose.Schema({
+  _id: Number, // Ensures _id follows the expected numerical format
+  name: { type: String, required: true },
+  titles: { type: [String], default: [] },
+  reviews: { type: [Object], default: [] }, // Array of images/videos
+  description: { type: String, default: "" },
+  about: { type: String, default: "" },
+  developer: { type: String, default: "" },
+  genres: { type: [String], default: [] },
+});
 
-// Export a function to get the games collection dynamically
-module.exports = { getGameCollection, Game };
+const Game = mongoose.model("Game", gameSchema, "games"); // Explicitly set the collection name to "games"
+
+module.exports = Game;
