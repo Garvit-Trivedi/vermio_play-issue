@@ -1,22 +1,23 @@
 const express = require("express");
-const cors = require("cors");
-const connectDB = require("./config/db"); // ✅ Correct Import
-
+const connectDB = require("./config/db");
 require("dotenv").config();
+
+const authRoutes = require("./routes/authRoutes");
+const userRoutes = require("./routes/userRoutes");
+const gameRoutes = require("./routes/gameRoutes");
 
 const app = express();
 
 // Middleware
 app.use(express.json());
-app.use(cors());
 
-// Connect to MongoDB
-connectDB(); // ✅ Call the function
+// Connect to DB
+connectDB();
 
 // Routes
-app.use("/api/auth", require("./routes/authRoutes"));
-app.use("/api/games", require("./routes/gamesRoutes"));
+app.use("/api/auth", authRoutes);
+app.use("/api/users", userRoutes);
+app.use("/api/games", gameRoutes);
 
-// Start the Server
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
