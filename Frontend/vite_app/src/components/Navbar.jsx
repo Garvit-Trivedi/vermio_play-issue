@@ -3,7 +3,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import "./tailwind.css";
 import { FaUser, FaUserFriends, FaHome, FaCompass, FaList, FaBook, FaCreditCard, FaSignOutAlt, FaSignInAlt } from "react-icons/fa";
 import { TfiAlignRight } from "react-icons/tfi";
-import SearchBar from "./SearchBar";
+import SearchBar from "./searchBar";
 import FriendsSidebar from "./FriendsSidebar";
 import { AuthContext } from "../AuthContext";
 
