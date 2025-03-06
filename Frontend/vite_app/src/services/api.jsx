@@ -1,244 +1,59 @@
-// const BASE_URL = "https://vermio-play.onrender.com/api";
-
-// // Fetch all games
-// export const fetchGames = async () => {
-//   try {
-//     const res = await fetch(`${BASE_URL}/games/games`);
-//     if (!res.ok) throw new Error("Failed to fetch games");
-//     return await res.json();
-//   } catch (error) {
-//     console.error(error); // Log error
-//     return []; // Return empty array in case of error
-//   }
-// };
-
-// export const searchGames = async (query) => {
-//   try {
-//     const res = await fetch(`${BASE_URL}/games/games/search?q=${query}`);
-//     if (!res.ok) throw new Error("Failed to search games");
-//     return await res.json();
-//   } catch (error) {
-//     console.error(error);
-//     return [];
-//   }
-// };
-
-
-// // Fetch library data
-// export const fetchLibrary = async () => {
-//   try {
-//     const res = await fetch(`${BASE_URL}/games/library`);
-//     if (!res.ok) throw new Error("Failed to fetch library");
-//     return await res.json();
-//   } catch (error) {
-//     console.error(error); // Log error
-//     return []; // Return empty array in case of error
-//   }
-// };
-
-// export const addToLibrary = async (gameId) => {
-//   try {
-//     const res = await fetch(`${BASE_URL}/games/library`, {
-//       method: "POST",
-//       headers: { "Content-Type": "application/json" },
-//       body: JSON.stringify({ gameId: Number(gameId) }), // Ensure the gameId is a number
-//     });
-
-//     if (!res.ok) throw new Error("Failed to add game to library");
-//     console.log("Game added to library successfully");
-//   } catch (error) {
-//     console.error("Error adding to library:", error);
-//     throw error; // Propagate the error so it can be handled by the calling code
-//   }
-// };
-
-
-// // Remove game from the library
-// export const removeFromLibrary = async (gameId) => {
-//   try {
-//     const res = await fetch(`${BASE_URL}/games/library/${gameId}`, {
-//       method: "DELETE",
-//       headers: { "Content-Type": "application/json" },
-//     });
-
-//     if (!res.ok) throw new Error("Failed to remove game from library");
-//     console.log("Game removed from library successfully");
-//   } catch (error) {
-//     console.error(error);
-//     throw error; // Propagate the error
-//   }
-// };
-
-// // Fetch details of a specific game
-// export const fetchGameDetails = async (gameId) => {
-//   try {
-//     const res = await fetch(`${BASE_URL}/games/games/${gameId}`);
-//     if (!res.ok) throw new Error("Failed to fetch game details");
-//     return await res.json();
-//   } catch (error) {
-//     console.error(error);
-//     return null; // Return null in case of error
-//   }
-// };
-
-// // Fetch games by category
-// export const fetchGamesByCategory = async (category) => {
-//   try {
-//     const res = await fetch(`${BASE_URL}/games/games/search?q=${category}`);
-//     if (!res.ok) throw new Error(`Failed to fetch games for category: ${category}`);
-//     return await res.json();
-//   } catch (error) {
-//     console.error(error);
-//     return [];
-//   }
-// };
-
-
 const BASE_URL = "https://vermio-play.onrender.com/api";
+// const BASE_URL = "http://localhost:3000/api";
 
-// Fetch all games
-export const fetchGames = async () => {
-  try {
-    const res = await fetch(`${BASE_URL}/games/games`);
-    if (!res.ok) throw new Error("Failed to fetch games");
-    return await res.json();
-  } catch (error) {
-    console.error(error);
-    return [];
+
+const getToken = () => localStorage.getItem("authToken");
+
+const apiRequest = async (method, url, data = null) => {
+  const token = getToken();
+  const headers = {
+    "Content-Type": "application/json",
+    ...(token && { Authorization: `Bearer ${token}` })
+  };
+
+  const response = await fetch(`${BASE_URL}${url}`, {
+    method,
+    headers,
+    ...(data && { body: JSON.stringify(data) })
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.message || `Failed to ${method} ${url}`);
   }
+
+  return response.json();
 };
 
-export const searchGames = async (query) => {
-  try {
-    const res = await fetch(`${BASE_URL}/games/games/search?q=${query}`);
-    if (!res.ok) throw new Error("Failed to search games");
-    return await res.json();
-  } catch (error) {
-    console.error(error);
-    return [];
-  }
-};
+export const fetchGames = () => apiRequest('GET', '/games');
+export const searchGames = (query) => apiRequest('GET', `/games?q=${query}`);
+export const fetchGameDetails = (gameId) => apiRequest('GET', `/games/${gameId}`);
+export const fetchGamesByCategory = (category) => apiRequest('GET', `/games?q=${category}`);
+export const likeGame = (gameId) => apiRequest('POST', `/games/${gameId}/like`);
+export const addComment = (gameId, commentText) => apiRequest('POST', `/games/${gameId}/comments`, { commentText });
+export const likeComment = (gameId, commentId) => apiRequest('POST', `/games/${gameId}/comments/${commentId}/like`);
+export const replyToComment = (gameId, commentId, commentText) =>
+  apiRequest('POST', `/games/${gameId}/comments/${commentId}/reply`, { commentText });
 
-// ======== AUTHENTICATION =========
-
-// Sign-Up API
 export const signUp = async (userData) => {
-  try {
-    const res = await fetch(`${BASE_URL}/auth/signup`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(userData),
-    });
-
-    if (!res.ok) throw new Error("Sign-Up failed");
-    return await res.json();
-  } catch (error) {
-    console.error("Sign-Up Error:", error);
-    throw error;
-  }
+  const data = await apiRequest('POST', '/auth/signup', userData);
+  if (data.token) localStorage.setItem("authToken", data.token);
+  return data;
 };
 
-// Sign-In API
 export const signIn = async (credentials) => {
-  try {
-    const res = await fetch(`${BASE_URL}/auth/signin`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(credentials),
-    });
-
-    const data = await res.json();
-    if (response.ok && data.token) {
-      localStorage.setItem("authToken", data.token); // Store token
-      window.location.reload(); // Reload to update state
-    } else {
-      toast.error(data.message || "Sign-in failed");
-    }
-  } catch (error) {
-    console.error("Sign-In Error:", error);
-    throw error;
-  }
+  const data = await apiRequest('POST', '/auth/signin', credentials);
+  if (data.token) localStorage.setItem("authToken", data.token);
+  return data;
 };
 
-// ======== USER LIBRARY (WITH TOKEN) =========
+export const fetchLibrary = () => apiRequest('GET', '/users/library/me');
+export const addToLibrary = (gameId) => apiRequest('POST', '/users/library/add', { gameId });
+export const removeFromLibrary = (gameId) => apiRequest('POST', '/users/library/remove', { gameId });
 
-// Fetch user library (Requires authentication)
-export const fetchLibrary = async (token) => {
-  if (!token) return [];
-
-  const response = await fetch("https://vermio-play.onrender.com/api/library", {
-    method: "GET",
-    headers: {
-      "Authorization": `Bearer ${token}`,
-      "Content-Type": "application/json",
-    },
-  });
-
-  return response.ok ? response.json() : [];
-};
-
-export const addToLibrary = async (gameId, token) => {
-  return fetch("https://vermio-play.onrender.com/api/library", {
-    method: "POST",
-    headers: {
-      "Authorization": `Bearer ${token}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ gameId }),
-  });
-};
-
-export const removeFromLibrary = async (gameId, token) => {
-  return fetch(`https://vermio-play.onrender.com/api/library/${gameId}`, {
-    method: "DELETE",
-    headers: {
-      "Authorization": `Bearer ${token}`,
-      "Content-Type": "application/json",
-    },
-  });
-};
-
-// Delete User Account (Requires authentication)
-export const deleteUserAccount = async () => {
-  try {
-    const token = localStorage.getItem("token");
-    const res = await fetch(`${BASE_URL}/auth/delete`, {
-      method: "DELETE",
-      headers: { Authorization: `Bearer ${token}` },
-    });
-
-    if (!res.ok) throw new Error("Failed to delete account");
-
-    localStorage.removeItem("token"); // Remove token on account deletion
-    console.log("Account deleted successfully");
-  } catch (error) {
-    console.error("Error deleting account:", error);
-    throw error;
-  }
-};
-
-// ======== GAME DETAILS =========
-
-// Fetch details of a specific game
-export const fetchGameDetails = async (gameId) => {
-  try {
-    const res = await fetch(`${BASE_URL}/games/games/${gameId}`);
-    if (!res.ok) throw new Error("Failed to fetch game details");
-    return await res.json();
-  } catch (error) {
-    console.error(error);
-    return null;
-  }
-};
-
-// Fetch games by category
-export const fetchGamesByCategory = async (category) => {
-  try {
-    const res = await fetch(`${BASE_URL}/games/games/search?q=${category}`);
-    if (!res.ok) throw new Error(`Failed to fetch games for category: ${category}`);
-    return await res.json();
-  } catch (error) {
-    console.error(error);
-    return [];
-  }
-};
+export const searchUsers = (query = '', limit = 15) => apiRequest('GET', `/users/query?q=${query}&limit=${limit}`);
+export const sendFriendRequest = (userId) => apiRequest('POST', '/users/friend/request', { userId });
+export const acceptFriendRequest = (userId) => apiRequest('POST', '/users/friend/accept', { userId });
+export const declineFriendRequest = (userId) => apiRequest('POST', '/users/friend/decline', { userId });
+export const getFriendList = () => apiRequest('GET', '/users/friends/me');
+export const removeFriend = (friendId) => apiRequest('POST', '/users/friend/remove', { friendId });

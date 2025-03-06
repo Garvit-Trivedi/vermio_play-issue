@@ -1,4 +1,5 @@
 const express = require("express");
+const router = express.Router();
 const {
   getAllGames,
   getGameById,
@@ -8,7 +9,6 @@ const {
   replyToComment,
 } = require("../controllers/gameController");
 const authMiddleware = require("../middleware/authMiddleware");
-const router = express.Router();
 
 router.get("/", getAllGames);
 router.get("/:id", getGameById);

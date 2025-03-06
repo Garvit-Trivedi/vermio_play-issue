@@ -1,47 +1,44 @@
 const mongoose = require("mongoose");
 
+const replySchema = new mongoose.Schema({
+  displayName: String,
+  commentText: String,
+  time: { type: Date, default: Date.now },
+});
+
+const commentSchema = new mongoose.Schema({
+  displayName: String,
+  commentText: String,
+  time: { type: Date, default: Date.now },
+  likes: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+  replies: [replySchema],
+});
+
+const reviewSchema = new mongoose.Schema({
+  type: { type: String, enum: ["image", "video", "text"], required: true },
+  url: { type: String, required: true },
+  displayName: String,
+  time: { type: Date, default: Date.now },
+});
+
 const gameSchema = new mongoose.Schema(
   {
     _id: { type: Number, required: true },
     name: { type: String, required: true },
-    profilePic: String,
-    bgPic: String,
+    profilePic: { type: String, required: true },
+    bgPic: { type: String },
     titles: [String],
+    reviews: [reviewSchema],
+    description: { type: String },
+    developer: { type: String },
     genres: [String],
-    developer: String,
-    description: String,
-    about: String, // Added
-    reviews: [
-      {
-        type: { type: String, enum: ["video", "text", "image"] },
-        url: String,
-        thumbnail: { type: String, required: true }, // Make required
-      },
-    ],
-    likes: [{ type: String }],
-    comments: [
-      {
-        commentId: {
-          type: String,
-          default: () => new mongoose.Types.ObjectId().toString(),
-        },
-        userId: { type: String },
-        displayName: { type: String },
-        commentText: { type: String, required: true },
-        time: { type: Date, default: Date.now },
-        likes: [String],
-        replies: [
-          {
-            userId: { type: String },
-            displayName: { type: String },
-            commentText: { type: String, required: true },
-            time: { type: Date, default: Date.now },
-          },
-        ],
-      },
-    ],
+    likes: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+    comments: [commentSchema],
+    updatedAt: { type: Date, default: Date.now },
   },
-  { timestamps: true, _id: false }
+  { versionKey: "__v" }
 );
+
+gameSchema.index({ name: "text", titles: "text", genres: "text" });
 
 module.exports = mongoose.model("Game", gameSchema);

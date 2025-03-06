@@ -1,4 +1,5 @@
 const express = require("express");
+const router = express.Router();
 const {
   getUserProfile,
   addToLibrary,
@@ -6,24 +7,22 @@ const {
   getUserLibrary,
   searchUsers,
   sendFriendRequest,
-  acceptFriendRequest, // New
-  declineFriendRequest, // New
-  getFriendList, // New
+  acceptFriendRequest,
+  declineFriendRequest,
+  getFriendList,
+  removeFriend,
 } = require("../controllers/userController");
 const authMiddleware = require("../middleware/authMiddleware");
-const router = express.Router();
 
-// Specific routes first
-router.get("/search", authMiddleware, searchUsers);
-router.post("/friend/request", authMiddleware, sendFriendRequest);
-router.post("/friend/accept", authMiddleware, acceptFriendRequest); // New
-router.post("/friend/decline", authMiddleware, declineFriendRequest); // New
-router.get("/friends/me", authMiddleware, getFriendList); // New
+router.get("/profile/:id", getUserProfile);
 router.post("/library/add", authMiddleware, addToLibrary);
 router.post("/library/remove", authMiddleware, removeFromLibrary);
 router.get("/library/me", authMiddleware, getUserLibrary);
-
-// Catch-all :id route last
-router.get("/:id", authMiddleware, getUserProfile);
+router.get("/query", authMiddleware, searchUsers);
+router.post("/friend/request", authMiddleware, sendFriendRequest);
+router.post("/friend/accept", authMiddleware, acceptFriendRequest);
+router.post("/friend/decline", authMiddleware, declineFriendRequest);
+router.get("/friends/me", authMiddleware, getFriendList);
+router.post("/friend/remove", authMiddleware, removeFriend);
 
 module.exports = router;

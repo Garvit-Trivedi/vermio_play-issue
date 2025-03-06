@@ -1,28 +1,29 @@
 import React, { useState } from "react";
 import Buttons from "./Buttons";
-import PrivateRoute from "./PrivateRoute";
 
-function GameCard({ game }) {
+function GameCard({ game, isInLibrary }) {
   const [isHovered, setIsHovered] = useState(false);
+  const firstVideo = game?.reviews?.find((r) => r.type === "video")?.url || null;
+
+  if (!game) return null;
 
   return (
     <div
-      className="game-card w-100 bg-gray-900 rounded-lg overflow-hidden transition-transform transform hover:scale-110 hover:z-20 border-2 border-cyan-300 hover:border-blue-500"
+      className="game-card w-full sm:w-94 bg-gray-900 rounded-lg overflow-hidden transition-transform transform hover:scale-105 hover:z-20 border-2 border-cyan-300 hover:border-blue-500"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      {/* Game Title & Play Button (Visible on Hover) */}
       {isHovered && (
-        <div className="text-cyan-300 p-4 absolute bg-slate-800 font-extrabold rounded-2xl bottom-4 left-10 z-10 w-80">
-          {game.name}<Buttons type="play" gameId={game._id} className="absolute top-1.5 right-2" />
+        <div className="text-cyan-300 p-2 sm:p-4 absolute bg-slate-800 font-extrabold rounded-2xl bottom-2 sm:bottom-4 left-4 sm:left-10 z-10 w-3/4 sm:w-80">
+          {game.name}
+          <Buttons type="play" gameId={game._id} className="absolute top-1 sm:top-1.5 right-1 sm:right-2" />
         </div>
       )}
 
-      {/* Static Image or Hover Video */}
-      {isHovered ? (
+      {isHovered && firstVideo ? (
         <video
-          src={game.firstVideo}
-          className="w-full h-[200px] object-cover"
+          src={firstVideo}
+          className="w-full h-40 sm:h-48 object-cover"
           autoPlay
           loop
           muted
@@ -31,16 +32,18 @@ function GameCard({ game }) {
         <img
           src={game.profilePic}
           alt={game.name}
-          className="w-full h-[200px] object-cover"
+          className="w-full h-40 sm:h-48 object-cover"
         />
       )}
 
-      {/* Library Button (Visible on Hover) */}
       {isHovered && (
-        <Buttons type="library" gameId={game._id} className="absolute top-4 right-4 z-10" />
+        <Buttons
+          type="library"
+          gameId={game._id}
+          className="absolute top-2 sm:top-4 right-2 sm:right-4 z-10"
+        />
       )}
 
-      {/* Inner Shadow Effect */}
       <div
         className={`absolute inset-0 rounded-lg transition-all duration-300 ${isHovered ? "shadow-[inset_0_50px_10px_100px_rgba(0,0,0,0.3)]" : ""}`}
       ></div>

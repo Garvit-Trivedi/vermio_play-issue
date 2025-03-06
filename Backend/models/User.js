@@ -9,10 +9,10 @@ const userSchema = new mongoose.Schema(
     date_of_birth: { type: Date, required: true },
     password: { type: String, required: true },
     library: [{ type: Number }],
-    friends: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }], // Array of friend IDs
+    friends: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+    sentFriendRequests: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
     friendRequests: [
       {
-        // Pending friend requests
         userId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
         status: {
           type: String,
