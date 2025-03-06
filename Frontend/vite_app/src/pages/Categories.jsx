@@ -1,62 +1,51 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useParams } from "react-router-dom";
-import { fetchGamesByCategory, fetchLibrary } from "../services/api";
+import { fetchGamesByCategory } from "../services/api";
 import GameCard from "../components/GameCard";
-import GameLoader from "../components/GameLoader"; // Import GameLoader
+import GameLoader from "../components/GameLoader";
+import { toast } from "react-toastify";
+import { AuthContext } from '../AuthContext';
 
 const Categories = () => {
   const { catname } = useParams();
+  const { library } = useContext(AuthContext);
   const [games, setGames] = useState([]);
-  const [library, setLibrary] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Fetch games in category and user library
   useEffect(() => {
     const fetchData = async () => {
-      setLoading(true);
-      const categoryGames = await fetchGamesByCategory(catname);
-      const libraryGames = await fetchLibrary();
-      setGames(categoryGames);
-      setLibrary(libraryGames);
-      setLoading(false);
+      try {
+        const categoryGames = await fetchGamesByCategory(catname);
+        setGames(categoryGames);
+      } catch (error) {
+        toast.error(error.message || "Failed to load category");
+      } finally {
+        setLoading(false);
+      }
     };
 
     fetchData();
   }, [catname]);
 
-  // Check if a game is in the library
-  const isGameInLibrary = (gameId) => library.some((g) => g._id === gameId);
-
-  // Update the library state when adding/removing games
-  const updateLibrary = (gameId) => {
-    setLibrary((prevLibrary) =>
-      isGameInLibrary(gameId)
-        ? prevLibrary.filter((game) => game._id !== gameId) // Remove from state
-        : [...prevLibrary, { _id: gameId }] // Add to state
-    );
-  };
+  if (loading) return <GameLoader />;
 
   return (
-    <div className="min-h-screen text-white p-4 sm:p-6">
-      <h1 className="text-3xl sm:text-4xl font-bold text-center mb-6">
+    <div className="min-h-screen text-white mx-auto p-2 sm:p-6">
+      <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-4 sm:mb-6">
         {catname.toUpperCase()} Games
       </h1>
-
-      {loading ? (
-        <GameLoader /> // Show GameLoader while loading
-      ) : games.length > 0 ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      {games.length > 0 ? (
+        <div className="grid grid-cols-1 w-max sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-2 sm:gap-3 mx-auto">
           {games.map((game) => (
             <GameCard
               key={game._id}
               game={game}
-              isInLibrary={isGameInLibrary(game._id)}
-              updateLibrary={updateLibrary} // Pass update function to GameCard
+              isInLibrary={library.has(game._id)}
             />
           ))}
         </div>
       ) : (
-        <p className="text-center text-lg">No games found in this category.</p>
+        <p className="text-center text-base sm:text-lg">No games found in this category.</p>
       )}
     </div>
   );

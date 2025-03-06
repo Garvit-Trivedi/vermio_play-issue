@@ -1,11 +1,8 @@
 const express = require("express");
-const { signUp, signIn, deleteUser } = require("../controllers/authController");
-const verifyToken = require("../middleware/verifyToken"); // Ensure the user is authenticated
-
+const { signup, signin } = require("../controllers/authController");
 const router = express.Router();
 
-router.post("/signup", signUp); // Register a new user
-router.post("/signin", signIn); // Log in an existing user
-router.delete("/delete", verifyToken, deleteUser); // Only authenticated users can delete their account
+router.post("/signup", signup);
+router.post("/signin", signin);
 
 module.exports = router;

@@ -43,3 +43,29 @@
 .read-the-docs {
   color: #888;
 }
+
+/* Global scrollbar styling for WebKit/Blink browsers (Chrome, Edge, Safari) */
+::-webkit-scrollbar {
+  width: 10px; /* Width of the scrollbar */
+  height: 10px; /* Height for horizontal scrollbars, if needed */
+}
+
+::-webkit-scrollbar-track {
+  background: #1f2937; /* Matches navbar bg-gray-800 */
+  border-radius: 5px; /* Slight rounding for a modern look */
+}
+
+::-webkit-scrollbar-thumb {
+  background: #3b82f6; /* Matches blue-500 for hover/active states */
+  border-radius: 5px; /* Rounded thumb */
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #2563eb; /* Darker blue (blue-600) on hover for interactivity */
+}
+
+/* Firefox scrollbar styling (standardized properties) */
+* {
+  scrollbar-width: thin; /* Slimmer scrollbar */
+  scrollbar-color: #3b82f6 #1f2937; /* Thumb color, Track color */
+}
