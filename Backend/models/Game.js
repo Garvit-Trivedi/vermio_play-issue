@@ -1,12 +1,15 @@
 const mongoose = require("mongoose");
 
 const replySchema = new mongoose.Schema({
+  email_id: { type: String, required: true }, // Changed to email_id
   displayName: String,
   commentText: String,
   time: { type: Date, default: Date.now },
+  likes: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
 });
 
 const commentSchema = new mongoose.Schema({
+  email_id: { type: String, required: true }, // Changed to email_id
   displayName: String,
   commentText: String,
   time: { type: Date, default: Date.now },

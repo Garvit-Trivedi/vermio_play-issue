@@ -85,14 +85,15 @@ const addComment = async (req, res) => {
     ]);
     if (!game) return res.status(404).json({ message: "Game not found" });
 
-    game.reviews.push({
-      type: "text",
-      url: commentText,
+    game.comments.push({
+      email_id: user.email_id, // Updated
       displayName: user.display_name,
+      commentText,
       time: new Date(),
+      likes: [],
     });
     await game.save();
-    res.json({ message: "Comment added", reviews: game.reviews });
+    res.json({ message: "Comment added", comments: game.comments });
   } catch (err) {
     console.error("Error in addComment:", err.message);
     res.status(500).json({ message: err.message });
@@ -109,7 +110,7 @@ const likeComment = async (req, res) => {
     const game = await Game.findById(gameId);
     if (!game) return res.status(404).json({ message: "Game not found" });
 
-    const comment = game.reviews.id(commentId);
+    const comment = game.comments.id(commentId);
     if (!comment) return res.status(404).json({ message: "Comment not found" });
 
     if (!comment.likes.includes(req.user._id)) {
@@ -139,19 +140,109 @@ const replyToComment = async (req, res) => {
     ]);
     if (!game) return res.status(404).json({ message: "Game not found" });
 
-    const comment = game.reviews.id(commentId);
+    const comment = game.comments.id(commentId);
     if (!comment) return res.status(404).json({ message: "Comment not found" });
 
     comment.replies = comment.replies || [];
     comment.replies.push({
-      commentText,
+      email_id: user.email_id, // Updated
       displayName: user.display_name,
+      commentText,
       time: new Date(),
+      likes: [],
     });
     await game.save();
     res.json({ message: "Reply added", replies: comment.replies });
   } catch (err) {
     console.error("Error in replyToComment:", err.message);
+    res.status(500).json({ message: err.message });
+  }
+};
+
+const deleteComment = async (req, res) => {
+  try {
+    const gameId = Number(req.params.id);
+    const { commentId } = req.params;
+    if (isNaN(gameId))
+      return res.status(400).json({ message: "Invalid game ID" });
+
+    const game = await Game.findById(gameId);
+    if (!game) return res.status(404).json({ message: "Game not found" });
+
+    const comment = game.comments.id(commentId);
+    if (!comment) return res.status(404).json({ message: "Comment not found" });
+
+    if (comment.email_id !== req.user.email_id) {
+      // Updated
+      return res
+        .status(403)
+        .json({ message: "You can only delete your own comments" });
+    }
+
+    game.comments.pull({ _id: commentId });
+    await game.save();
+    res.json({ message: "Comment deleted", comments: game.comments });
+  } catch (err) {
+    console.error("Error in deleteComment:", err.message);
+    res.status(500).json({ message: err.message });
+  }
+};
+
+const deleteReply = async (req, res) => {
+  try {
+    const gameId = Number(req.params.id);
+    const { commentId, replyId } = req.params;
+    if (isNaN(gameId))
+      return res.status(400).json({ message: "Invalid game ID" });
+
+    const game = await Game.findById(gameId);
+    if (!game) return res.status(404).json({ message: "Game not found" });
+
+    const comment = game.comments.id(commentId);
+    if (!comment) return res.status(404).json({ message: "Comment not found" });
+
+    const reply = comment.replies.id(replyId);
+    if (!reply) return res.status(404).json({ message: "Reply not found" });
+
+    if (reply.email_id !== req.user.email_id) {
+      // Updated
+      return res
+        .status(403)
+        .json({ message: "You can only delete your own replies" });
+    }
+
+    comment.replies.pull({ _id: replyId });
+    await game.save();
+    res.json({ message: "Reply deleted", replies: comment.replies });
+  } catch (err) {
+    console.error("Error in deleteReply:", err.message);
+    res.status(500).json({ message: err.message });
+  }
+};
+
+const likeReply = async (req, res) => {
+  try {
+    const gameId = Number(req.params.id);
+    const { commentId, replyId } = req.params;
+    if (isNaN(gameId))
+      return res.status(400).json({ message: "Invalid game ID" });
+
+    const game = await Game.findById(gameId);
+    if (!game) return res.status(404).json({ message: "Game not found" });
+
+    const comment = game.comments.id(commentId);
+    if (!comment) return res.status(404).json({ message: "Comment not found" });
+
+    const reply = comment.replies.id(replyId);
+    if (!reply) return res.status(404).json({ message: "Reply not found" });
+
+    if (!reply.likes.includes(req.user._id)) {
+      reply.likes.push(req.user._id);
+      await game.save();
+    }
+    res.json({ message: "Reply liked", likes: reply.likes });
+  } catch (err) {
+    console.error("Error in likeReply:", err.message);
     res.status(500).json({ message: err.message });
   }
 };
@@ -163,4 +254,7 @@ module.exports = {
   addComment,
   likeComment,
   replyToComment,
+  deleteComment,
+  deleteReply,
+  likeReply,
 };
