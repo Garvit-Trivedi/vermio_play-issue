@@ -11,10 +11,12 @@ import SignIn from './pages/SignIn';
 import SignUp from './pages/SignUp';
 import PrivateRoute from './components/PrivateRoute';
 import { ToastContainer } from "react-toastify";
+import ErrorBoundary from "./components/ErrorBoundary";
 
 function App() {
   return (
     <AuthProvider>
+      <ErrorBoundary>
       <Router>
         <div className="flex flex-col min-h-screen">
           <Navbar />
@@ -36,6 +38,7 @@ function App() {
           <ToastContainer />
         </div>
       </Router>
+      </ErrorBoundary>
     </AuthProvider>
   );
 }
