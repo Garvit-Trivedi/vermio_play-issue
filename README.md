@@ -1,8 +1,16 @@
 # vermio_play
 
-## **Figma Link**
+## **Deployed Link:**
 
-[VerMio Play Figma](https://www.figma.com/design/aGv6SfQoVMq0m2eprBvRLI/VerMio-PLay?node-id=0-1&t=rgDQwnVIX8WZhaf5-1)
+### [**VerMio Play**](https://vermio-play-1.onrender.com)
+
+## **Figma Link:**
+
+### [VerMio Play Figma](https://www.figma.com/design/aGv6SfQoVMq0m2eprBvRLI/VerMio-PLay?node-id=0-1&t=rgDQwnVIX8WZhaf5-1)
+
+## **Postman Link:**
+
+### [VerMio Play docs](https://documenter.getpostman.com/view/39189272/2sAYk7R3WP)
 
 ---
 
