@@ -1,3 +1,4 @@
+
 const Game = require("../models/Game");
 const User = require("../models/User");
 
@@ -34,8 +35,8 @@ const getAllGames = async (req, res) => {
 
 const getGameById = async (req, res) => {
   try {
-    const gameId = req.params.id; // Keep as string
-    const game = await Game.findById(gameId);
+    const gameId = Number(req.params.id);
+    const game = await Game.findOne({ _id: gameId });
     if (!game) return res.status(404).json({ message: "Game not found" });
 
     res.json(game);
@@ -47,8 +48,8 @@ const getGameById = async (req, res) => {
 
 const likeGame = async (req, res) => {
   try {
-    const gameId = req.params.id;
-    const game = await Game.findById(gameId);
+    const gameId = Number(req.params.id);
+    const game = await Game.findOne({ _id: gameId });
     if (!game) return res.status(404).json({ message: "Game not found" });
 
     const userId = req.user._id.toString();
@@ -69,15 +70,66 @@ const likeGame = async (req, res) => {
   }
 };
 
+const rateGame = async (req, res) => {
+  try {
+    const { rating } = req.body;
+    const gameId = Number(req.params.id);
+    const userId = req.user._id;
+
+    if (!rating || rating < 1 || rating > 5) {
+      return res
+        .status(400)
+        .json({ message: "Rating must be between 1 and 5" });
+    }
+
+    const game = await Game.findOne({ _id: gameId });
+    if (!game) return res.status(404).json({ message: "Game not found" });
+
+    const existingRating = game.rating.find(
+      (r) => r.userId.toString() === userId.toString()
+    ); // Changed to game.rating
+    if (existingRating) {
+      existingRating.rating = rating;
+    } else {
+      game.rating.push({ userId, rating }); // Changed to game.rating
+    }
+
+    await game.save();
+    res.json({ message: "Rating submitted", rating: game.rating }); // Changed to rating
+  } catch (err) {
+    console.error("Error in rateGame:", err.message);
+    res.status(500).json({ message: err.message });
+  }
+};
+
+const getRatingsDistribution = async (req, res) => {
+  try {
+    const gameId = Number(req.params.id);
+    const game = await Game.findOne({ _id: gameId });
+    if (!game) return res.status(404).json({ message: "Game not found" });
+
+    const distribution = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
+    game.rating.forEach((r) => {
+      // Changed to game.rating
+      distribution[r.rating] = (distribution[r.rating] || 0) + 1;
+    });
+
+    res.json(distribution);
+  } catch (err) {
+    console.error("Error in getRatingsDistribution:", err.message);
+    res.status(500).json({ message: err.message });
+  }
+};
+
 const addComment = async (req, res) => {
   try {
-    const gameId = req.params.id;
+    const gameId = Number(req.params.id);
     const { commentText } = req.body;
     if (!commentText)
       return res.status(400).json({ message: "Comment text is required" });
 
     const [game, user] = await Promise.all([
-      Game.findById(gameId),
+      Game.findOne({ _id: gameId }),
       User.findById(req.user._id),
     ]);
     if (!game) return res.status(404).json({ message: "Game not found" });
@@ -99,9 +151,9 @@ const addComment = async (req, res) => {
 
 const likeComment = async (req, res) => {
   try {
-    const gameId = req.params.id;
+    const gameId = Number(req.params.id);
     const { commentId } = req.params;
-    const game = await Game.findById(gameId);
+    const game = await Game.findOne({ _id: gameId });
     if (!game) return res.status(404).json({ message: "Game not found" });
 
     const comment = game.comments.id(commentId);
@@ -127,14 +179,14 @@ const likeComment = async (req, res) => {
 
 const replyToComment = async (req, res) => {
   try {
-    const gameId = req.params.id;
+    const gameId = Number(req.params.id);
     const { commentId } = req.params;
     const { commentText } = req.body;
     if (!commentText)
       return res.status(400).json({ message: "Reply text is required" });
 
     const [game, user] = await Promise.all([
-      Game.findById(gameId),
+      Game.findOne({ _id: gameId }),
       User.findById(req.user._id),
     ]);
     if (!game) return res.status(404).json({ message: "Game not found" });
@@ -160,9 +212,9 @@ const replyToComment = async (req, res) => {
 
 const deleteComment = async (req, res) => {
   try {
-    const gameId = req.params.id;
+    const gameId = Number(req.params.id);
     const { commentId } = req.params;
-    const game = await Game.findById(gameId);
+    const game = await Game.findOne({ _id: gameId });
     if (!game) return res.status(404).json({ message: "Game not found" });
 
     const comment = game.comments.id(commentId);
@@ -185,9 +237,9 @@ const deleteComment = async (req, res) => {
 
 const deleteReply = async (req, res) => {
   try {
-    const gameId = req.params.id;
+    const gameId = Number(req.params.id);
     const { commentId, replyId } = req.params;
-    const game = await Game.findById(gameId);
+    const game = await Game.findOne({ _id: gameId });
     if (!game) return res.status(404).json({ message: "Game not found" });
 
     const comment = game.comments.id(commentId);
@@ -211,20 +263,18 @@ const deleteReply = async (req, res) => {
   }
 };
 
-const likeReply = async (req, reply) => {
+const likeReply = async (req, res) => {
   try {
-    const gameId = req.params.id;
+    const gameId = Number(req.params.id);
     const { commentId, replyId } = req.params;
-    const game = await Game.findById(gameId);
-    if (!game) return reply.status(404).json({ message: "Game not found" });
+    const game = await Game.findOne({ _id: gameId });
+    if (!game) return res.status(404).json({ message: "Game not found" });
 
     const comment = game.comments.id(commentId);
-    if (!comment)
-      return reply.status(404).json({ message: "Comment not found" });
+    if (!comment) return res.status(404).json({ message: "Comment not found" });
 
     const replyDoc = comment.replies.id(replyId);
-    if (!replyDoc)
-      return reply.status(404).json({ message: "Reply not found" });
+    if (!replyDoc) return res.status(404).json({ message: "Reply not found" });
 
     const userId = req.user._id.toString();
     const hasLiked = replyDoc.likes.some((id) => id.toString() === userId);
@@ -232,15 +282,15 @@ const likeReply = async (req, reply) => {
     if (hasLiked) {
       replyDoc.likes = replyDoc.likes.filter((id) => id.toString() !== userId);
       await game.save();
-      reply.json({ message: "Like removed from reply", likes: replyDoc.likes });
+      res.json({ message: "Like removed from reply", likes: replyDoc.likes });
     } else {
       replyDoc.likes.push(req.user._id);
       await game.save();
-      reply.json({ message: "Reply liked", likes: replyDoc.likes });
+      res.json({ message: "Reply liked", likes: replyDoc.likes });
     }
   } catch (err) {
     console.error("Error in likeReply:", err.message);
-    reply.status(500).json({ message: err.message });
+    res.status(500).json({ message: err.message });
   }
 };
 
@@ -248,6 +298,8 @@ module.exports = {
   getAllGames,
   getGameById,
   likeGame,
+  rateGame,
+  getRatingsDistribution,
   addComment,
   likeComment,
   replyToComment,

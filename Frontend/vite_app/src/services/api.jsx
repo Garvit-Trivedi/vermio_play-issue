@@ -1,5 +1,5 @@
-const BASE_URL = "https://vermio-play.onrender.com/api";
-// const BASE_URL = "http://localhost:3000/api";
+
+const BASE_URL = "http://localhost:3000/api";
 const getToken = () => localStorage.getItem("authToken");
 
 const apiRequest = async (method, url, data = null) => {
@@ -41,6 +41,13 @@ export const deleteReply = (gameId, commentId, replyId) =>
 export const likeReply = (gameId, commentId, replyId) =>
   apiRequest("POST", `/games/${gameId}/comments/${commentId}/reply/${replyId}/like`);
 
+//rating
+
+export const fetchRatingsDistribution = (gameId) =>
+  apiRequest("GET", `/games/${gameId}/ratings-distribution`);
+export const rateGame = (gameId, rating) =>
+  apiRequest("POST", `/games/${gameId}/rate`, { rating });
+
 // Auth and user-related functions (unchanged)
 export const signUp = async (userData) => {
   const data = await apiRequest("POST", "/auth/signup", userData);
@@ -64,3 +71,4 @@ export const acceptFriendRequest = (userId) => apiRequest("POST", "/users/friend
 export const declineFriendRequest = (userId) => apiRequest("POST", "/users/friend/decline", { userId });
 export const getFriendList = () => apiRequest("GET", "/users/friends/me");
 export const removeFriend = (friendId) => apiRequest("POST", "/users/friend/remove", { friendId });
+
