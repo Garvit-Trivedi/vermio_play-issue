@@ -1,4 +1,3 @@
-// GamePage.jsx
 import { useState, useEffect, useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { fetchGameDetails, fetchGames, likeGame } from "../services/api";
@@ -9,7 +8,6 @@ import { toast } from "react-toastify";
 import { AuthContext } from "../AuthContext";
 import GameDetails from "../components/GameDetails";
 import CommentsSection from "../components/CommentsSection";
-import "./home.css";
 
 function GamePage() {
   const { id } = useParams();
@@ -85,11 +83,12 @@ function GamePage() {
 
   return (
     <div className="relative min-h-screen flex flex-col items-center px-2 sm:px-4 lg:px-8 text-white">
+      {/* Full-page background image with gradient overlay */}
       <div
-        className="absolute inset-0 bg-cover bg-center opacity-30"
+        className="absolute inset-0 bg-cover bg-center"
         style={{ backgroundImage: `url(${gameDetails.bgPic})` }}
       ></div>
-      <div className="absolute inset-0 bg-gradient-to-t from-gray-900/15 to-gray-900/1"></div>
+      <div className="absolute inset-0 bg-gradient-to-b from-gray-900/3 via-gray-900/7 to-gray-900/9"></div>
 
       <GameDetails
         gameDetails={gameDetails}
@@ -121,7 +120,7 @@ function GamePage() {
         handleReplyDelete={handleReplyDelete}
       />
 
-      <div className="relative z-10 mt-8 sm:mt-12 w-full max-w-6xl mb-8">
+      <div className="relative z-10 mt-8 sm:mt-12 w-full max-w-6xl mx-auto">
         <h2 className="text-white text-lg sm:text-2xl font-bold mb-4 flex items-center gap-2">
           <span className="bg-green-600 w-1 h-6 rounded-full"></span>
           More Games You Might Like
