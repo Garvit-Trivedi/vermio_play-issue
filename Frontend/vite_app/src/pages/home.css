@@ -15,5 +15,58 @@
   .animate-fadeIn {
     animation: fadeIn 0.3s ease-out forwards;
   }
+
   
-  
+
+.rating-section {
+  margin-bottom: 0; /* Remove bottom margin since it's inline */
+}
+.star-rating .star {
+  font-size: 16px;
+  color: #ccc;
+  transition: color 0.2s;
+  padding: 0 1px;
+}
+.star-rating .star.filled {
+  color: #ffd700;
+}
+.rating-distribution {
+  max-width: 100%; /* Full width within its container */
+}
+.rating-bar {
+  display: flex;
+  align-items: center;
+  margin-bottom: 6px;
+}
+.rating-label {
+  width: 32px;
+  text-align: right;
+  font-size: 14px;
+  color: #fff;
+}
+.bar-container {
+  flex: 1;
+  background: #444;
+  height: 8px;
+  border-radius: 4px;
+  overflow: hidden;
+}
+.bar-fill {
+  height: 100%;
+  transition: width 0.3s ease-in-out;
+}
+.rating-count {
+  width: 40px;
+  text-align: left;
+  font-size: 14px;
+  color: #fff;
+}
+.bg-green-500 {
+  background-color: #22c55e; /* Tailwind's green-500 */
+}
+.bg-yellow-500 {
+  background-color: #eab308; /* Tailwind's yellow-500 */
+}
+.bg-red-500 {
+  background-color: #ef4444; /* Tailwind's red-500 */
+}

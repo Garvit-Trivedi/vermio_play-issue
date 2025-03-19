@@ -1,7 +1,8 @@
+
 const mongoose = require("mongoose");
 
 const replySchema = new mongoose.Schema({
-  email_id: { type: String, required: true }, // Changed to email_id
+  email_id: { type: String, required: true },
   displayName: String,
   commentText: String,
   time: { type: Date, default: Date.now },
@@ -9,7 +10,7 @@ const replySchema = new mongoose.Schema({
 });
 
 const commentSchema = new mongoose.Schema({
-  email_id: { type: String, required: true }, // Changed to email_id
+  email_id: { type: String, required: true },
   displayName: String,
   commentText: String,
   time: { type: Date, default: Date.now },
@@ -37,6 +38,17 @@ const gameSchema = new mongoose.Schema(
     genres: [String],
     likes: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
     comments: [commentSchema],
+    rating: [
+      // Changed from 'ratings' to 'rating' to match your document
+      {
+        userId: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "User",
+          required: true,
+        },
+        rating: { type: Number, required: true, min: 1, max: 5 },
+      },
+    ],
     updatedAt: { type: Date, default: Date.now },
   },
   { versionKey: "__v" }

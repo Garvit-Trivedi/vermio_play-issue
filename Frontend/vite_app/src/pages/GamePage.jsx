@@ -1,3 +1,4 @@
+// GamePage.jsx
 import { useState, useEffect, useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { fetchGameDetails, fetchGames, likeGame } from "../services/api";
@@ -59,15 +60,7 @@ function GamePage() {
     }
   };
 
-  // Calculate hasLiked directly in render
   const hasLiked = gameDetails?.likes?.some((id) => id.toString() === (userId?.toString() || "")) || false;
-
-  // Debug the state
-  useEffect(() => {
-    console.log("hasLiked:", hasLiked);
-    console.log("gameDetails.likes:", gameDetails?.likes);
-    console.log("userId:", userId);
-  }, [hasLiked, gameDetails?.likes, userId]);
 
   const handleLike = async () => {
     if (!authToken) {
@@ -76,16 +69,10 @@ function GamePage() {
     }
     try {
       setLoading(true);
-      const response = await likeGame(id, authToken); // Pass authToken to api call
-      console.log("API Response:", response);
-      setGameDetails((prev) => {
-        const updatedGame = { ...prev, likes: response.likes };
-        console.log("Updated gameDetails.likes:", updatedGame.likes);
-        return updatedGame;
-      });
+      const response = await likeGame(id, authToken);
+      setGameDetails((prev) => ({ ...prev, likes: response.likes }));
       toast.success(response.message);
     } catch (err) {
-      console.error("Error in handleLike:", err);
       toast.error(err.message || "Failed to update like");
     } finally {
       setLoading(false);
@@ -104,7 +91,15 @@ function GamePage() {
       ></div>
       <div className="absolute inset-0 bg-gradient-to-t from-gray-900/15 to-gray-900/1"></div>
 
-      <GameDetails gameDetails={gameDetails} hasLiked={hasLiked} handleLike={handleLike} loading={loading} />
+      <GameDetails
+        gameDetails={gameDetails}
+        hasLiked={hasLiked}
+        handleLike={handleLike}
+        loading={loading}
+        setGameDetails={setGameDetails}
+        authToken={authToken}
+        userId={userId}
+      />
 
       <CommentsSection
         gameDetails={gameDetails}
