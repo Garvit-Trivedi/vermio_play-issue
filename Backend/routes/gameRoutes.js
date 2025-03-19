@@ -14,7 +14,7 @@ const {
   deleteComment,
   deleteReply,
   likeReply,
-} = require("../controllers/gameController");
+} = require("../controllers/GameController");
 
 // Get all games or search games
 router.get("/", getAllGames);
