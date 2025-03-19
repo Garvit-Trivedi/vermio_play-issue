@@ -1,9 +1,11 @@
 /* src/styles/index.css */
 
-/* Global styles for the entire app */
+/* Import Tailwind CSS for v4 */
+@import "tailwindcss";
 
+/* Global styles for the entire app */
 * {
-  color: rgba(125, 230, 249, 1)
+  color: rgba(125, 230, 249, 1);
 }
 
 body {
@@ -24,7 +26,6 @@ h2 {
 }
 
 /* Add any custom global styles here */
-
 @keyframes smooth-spin {
   0% {
     transform: rotate(0deg) translate3d(0, 0, 0);
@@ -43,26 +44,35 @@ h2 {
 
 /* Global scrollbar styling for WebKit/Blink browsers (Chrome, Edge, Safari) */
 ::-webkit-scrollbar {
-  width: 10px; /* Width of the scrollbar */
-  height: 10px; /* Height for horizontal scrollbars, if needed */
+  width: 10px;
+  /* Width of the scrollbar */
+  height: 10px;
+  /* Height for horizontal scrollbars, if needed */
 }
 
 ::-webkit-scrollbar-track {
-  background: #1f2937; /* Matches navbar bg-gray-800 */
-  border-radius: 5px; /* Slight rounding for a modern look */
+  background: #1f2937;
+  /* Matches navbar bg-gray-800 */
+  border-radius: 5px;
+  /* Slight rounding for a modern look */
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #3b82f6; /* Matches blue-500 for hover/active states */
-  border-radius: 5px; /* Rounded thumb */
+  background: #3b82f6;
+  /* Matches blue-500 for hover/active states */
+  border-radius: 5px;
+  /* Rounded thumb */
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #2563eb; /* Darker blue (blue-600) on hover for interactivity */
+  background: #2563eb;
+  /* Darker blue (blue-600) on hover for interactivity */
 }
 
 /* Firefox scrollbar styling (standardized properties) */
 * {
-  scrollbar-width: thin; /* Slimmer scrollbar */
-  scrollbar-color: #0141a791 #1f293700; /* Thumb color, Track color */
+  scrollbar-width: thin;
+  /* Slimmer scrollbar */
+  scrollbar-color: #0141a791 #1f293700;
+  /* Thumb color, Track color */
 }
