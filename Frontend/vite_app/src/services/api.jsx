@@ -1,4 +1,4 @@
-const Base_URL = "https://vermio-play.onrender.com/api";
+const BASE_URL = "https://vermio-play.onrender.com/api";
 // const BASE_URL = "http://localhost:3000/api";
 const getToken = () => localStorage.getItem("authToken");
 
